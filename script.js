@@ -56,7 +56,7 @@ function evaluate(action) {
         memoryValue -= parseFloat(displayValue);
     } else if (action == 'multiply') {
         memoryValue *= parseFloat(displayValue);
-    } else if (action = 'divide') {
+    } else if (action == 'divide') {
         memoryValue /= parseFloat(displayValue);
     }
 
@@ -64,7 +64,6 @@ function evaluate(action) {
     console.log(displayValue)
     memoryValue = 0
     action = ''
-    memoryAction = '';
     updateDisplay();
 }
 
@@ -73,10 +72,27 @@ function add() {
     action = 'add';
     memoryAction = 'add';
     displayValue = '0';
-    // alert(action);
-    // evaluate(action);
-    // displayValue = '0';
-    // alert(memoryValue);
+}
+
+function minus() {
+    memoryValue += parseFloat(displayValue);
+    action = 'minus';
+    memoryAction = 'minus';
+    displayValue = '0';
+}
+
+function multiply() {
+    memoryValue += parseFloat(displayValue);
+    action = 'multiply';
+    memoryAction = 'multiply';
+    displayValue = '0';
+}
+
+function divide() {
+    memoryValue += parseFloat(displayValue);
+    action = 'divide';
+    memoryAction = 'divide';
+    displayValue = '0';
 }
 
 // after pressing -> displayValue snapshots to memory
@@ -116,7 +132,13 @@ buttons.forEach((button, index) => {
             add()
         } else if (button.innerText == '=') {
             evaluate(memoryAction);
-        }
+        } else if (button.innerText == '−') {
+            minus()
+        } else if (button.innerText == '✕') {
+            multiply()
+        } else if (button.innerText == '÷') {
+            divide()
+        } 
 
 
 
