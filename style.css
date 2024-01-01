@@ -23,10 +23,14 @@ body {
 }
 
 .result {
+    font-family: 'SF-Pro Light';
+    font-size: 135px;
+    font-weight: 100;
+    text-align: right;
     margin: 0 auto;
     margin-top: 160px;
     width: 510px;
-    margin-bottom: 20px;
+    min-height: 165px;
 }
 
 button {
@@ -69,11 +73,20 @@ button {
     font-weight: 100;
 }
 
-.result {
-    font-family: 'SF-Pro Light';
-    font-size: 140px;
-    font-weight: 100;
-    text-align: right;
+#percent {
+    font-size: 52px;
+}
+
+#plus {
+    padding-bottom: 10px;
+}
+
+#minus {
+    padding-bottom: 10px;
+}
+
+#divide {
+    padding-bottom: 10px;
 }
 
 button.clicked {

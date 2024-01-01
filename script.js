@@ -5,8 +5,6 @@ let memoryValue = 0;
 let action = '';
 let memoryAction = '';
 
-console.log(buttons);
-
 const getButtonId = {
     0: 16,
     1: 12,
@@ -33,11 +31,37 @@ const getButtonValue = {
     16: 0
 }
 
+function addSpaceBeforeComma(str) {
+    const parts = str.split(',');
+    const beforeComma = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return beforeComma + (parts[1] !== undefined ? ',' + parts[1] : '');
+  }
+  
+
 function updateDisplay() {
     if (displayValue.length >= 2 && displayValue[0] == 0) {
         displayValue = displayValue.slice(1);
     } 
-    display.innerText = displayValue.replace('.', ',');
+    if (displayValue.length < 7) {
+        display.style.fontSize = '135px';
+    }
+    if (displayValue.length == 7) {
+        display.style.fontSize = '105px';
+    }
+    if (displayValue.length == 8) {
+        display.style.fontSize = '90px';
+    }
+    if (displayValue.length == 9) {
+        display.style.fontSize = '80px';
+    }
+    if (displayValue.length > 9) {
+        displayValue = displayValue.slice(0, 9);
+    } 
+    if (displayValue.indexOf('.') == 0) {
+        displayValue = '0' + displayValue;
+    }
+    display.innerText = addSpaceBeforeComma(displayValue.replace('.', ','));
+    // display.innerText = displayValue.replace('.', ',');
 }
 
 function removeClicked(button) {
@@ -58,55 +82,34 @@ function evaluate(action) {
         memoryValue *= parseFloat(displayValue);
     } else if (action == 'divide') {
         memoryValue /= parseFloat(displayValue);
+    } else if (action == 'percent') {
+        memoryValue *= parseFloat(displayValue)/100;
+    } else if (action == '') {
+        memoryValue = parseFloat(displayValue);
     }
 
     displayValue = memoryValue.toString();
     console.log(displayValue)
     memoryValue = 0
     action = ''
+    memoryAction = ''
     updateDisplay();
 }
 
-function add() {
-    memoryValue += parseFloat(displayValue);
-    action = 'add';
-    memoryAction = 'add';
-    displayValue = '0';
+function preCalculate(memoryAction) {
+    if (memoryAction) {
+        evaluate(memoryAction)
+        updateDisplay()
+    }
 }
 
-function minus() {
+function setAction(symbol) {
+    preCalculate(memoryAction);
     memoryValue += parseFloat(displayValue);
-    action = 'minus';
-    memoryAction = 'minus';
+    action = symbol;
+    memoryAction = symbol;
     displayValue = '0';
-}
-
-function multiply() {
-    memoryValue += parseFloat(displayValue);
-    action = 'multiply';
-    memoryAction = 'multiply';
-    displayValue = '0';
-}
-
-function divide() {
-    memoryValue += parseFloat(displayValue);
-    action = 'divide';
-    memoryAction = 'divide';
-    displayValue = '0';
-}
-
-// after pressing -> displayValue snapshots to memory
-// new entered key instead of old displayValue 
-// after clicking equals or another -> action and result
-
-// plain
-// plain + action key
-
-// Enter numbers
-// click plus
-// nothing changes
-// start entering another -> clears old display
-// click equals -> displays result
+} 
 
 buttons.forEach((button, index) => {
     button.addEventListener('click', e => {
@@ -127,34 +130,36 @@ buttons.forEach((button, index) => {
                 displayValue = displayValue.slice(1);
             }
         } else if (button.innerText == ',') {
-            displayValue += '.'
+            if (displayValue.indexOf('.') == -1) {
+                displayValue += '.'
+            }
         } else if (button.innerText == '+') {
-            add()
+            setAction('add');
         } else if (button.innerText == '=') {
             evaluate(memoryAction);
         } else if (button.innerText == '−') {
-            minus()
+            setAction('minus');
         } else if (button.innerText == '✕') {
-            multiply()
+            setAction('multiply');
         } else if (button.innerText == '÷') {
-            divide()
+            setAction('divide');
+        } else if (button.innerText == '%') {
+            setAction('percent');
         } 
-
-
 
         if (action == '') {
             updateDisplay();
-        }
+        } 
     }); 
 })
 
-document.addEventListener('keydown', function (event) {
-    if (!isNaN(parseInt(event.key, 10))) {
-        let key = parseInt(event.key, 10);
-        let button = buttons[getButtonId[key]];
-        displayValue += key;
-        updateDisplay();
-        playAnim(button);
-    }
-});
+// document.addEventListener('keydown', function (event) {
+//     if (!isNaN(parseInt(event.key, 10))) {
+//         let key = parseInt(event.key, 10);
+//         let button = buttons[getButtonId[key]];
+//         displayValue += key;
+//         updateDisplay();
+//         playAnim(button);
+//     }
+// });
 
